@@ -3,61 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pendaftaran Lomba 17 Agustus</title>
+  <title>Form Pendaftaran Lomba</title>
   <style>
-    body {
-      font-family: sans-serif;
-      background: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .hidden { display: none; }
+    .form-section { margin-bottom: 20px; }
+    label { display: block; margin-top: 10px; }
+    select, input[type="text"], input[type="number"], input[type="tel"] {
+      width: 100%; padding: 8px; margin-top: 5px;
     }
-    .container {
-      max-width: 400px;
-      width: 100%;
-      padding: 20px;
-      text-align: center;
-    }
-    .hidden {
-      display: none;
-    }
-    input, select, button {
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      font-size: 1em;
-    }
-    button {
-      background-color: red;
-      color: white;
-      font-weight: bold;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
+    button { padding: 10px 20px; margin-top: 20px; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- Halaman Home -->
-    <div id="homePage">
-      <h2>Haiiiiii<br>Peserta Lomba 17 Agustus 2025</h2>
-      <p><strong>Ikatan Remaja Beji Pladen<br>RT04/RW14</strong></p>
-      <button onclick="goToForm()">Start</button>
-    </div>
 
-    <!-- Halaman Form -->
-    <form id="formPage" class="hidden">
-      <h3>Formulir Pendaftaran</h3>
+  <div id="home-section">
+    <h1>Selamat Datang di Pendaftaran Lomba</h1>
+    <button onclick="startForm()">Start</button>
+  </div>
 
-      <input type="text" name="nama" placeholder="Nama Lengkap Peserta" required>
-      <input type="number" name="usia" placeholder="Usia Peserta" required>
-      <input type="tel" name="hp" placeholder="Nomor HP Orang Tua / Peserta" required>
+  <form id="registration-form" class="hidden">
+    <div class="form-section">
+      <label>Nama Lengkap Peserta:</label>
+      <input type="text" name="nama" required />
 
+      <label>Usia Peserta Lomba:</label>
+      <input type="number" name="usia" required min="1" />
+
+      <label>Nomor HP Orang Tua / Peserta:</label>
+      <input type="tel" name="hp" required />
+
+      <label>Dari Buni Berapa Peserta:</label>
       <select name="buni" required>
-        <option value="">Dari Buni Berapa?</option>
+        <option value="">--Pilih--</option>
         <option>Buni Raya</option>
         <option>Buni 1</option>
         <option>Buni 2</option>
@@ -66,79 +44,85 @@
         <option>Buni 5</option>
       </select>
 
+      <label>Lomba untuk usia (3-5 tahun):</label>
       <select name="lomba_3_5">
-        <option value="">Lomba Usia 3–5 Tahun</option>
+        <option value="">--Pilih Kelas--</option>
         <option>Kelas A</option>
         <option>Kelas B</option>
         <option>Kelas C</option>
       </select>
 
+      <label>Lomba untuk usia (6-8 tahun):</label>
       <select name="lomba_6_8">
-        <option value="">Lomba Usia 6–8 Tahun</option>
+        <option value="">--Pilih Kelas--</option>
         <option>Kelas A</option>
         <option>Kelas B</option>
         <option>Kelas C</option>
       </select>
 
+      <label>Lomba untuk usia (9-11 tahun):</label>
       <select name="lomba_9_11">
-        <option value="">Lomba Usia 9–11 Tahun</option>
+        <option value="">--Pilih Kelas--</option>
         <option>Kelas A</option>
         <option>Kelas B</option>
         <option>Kelas C</option>
       </select>
 
+      <label>Lomba untuk Bapak-Bapak:</label>
       <select name="lomba_bapak">
-        <option value="">Lomba Bapak-Bapak</option>
+        <option value="">--Pilih Kelas--</option>
         <option>Kelas A</option>
         <option>Kelas B</option>
         <option>Kelas C</option>
       </select>
 
+      <label>Lomba untuk Ibu-Ibu:</label>
       <select name="lomba_ibu">
-        <option value="">Lomba Ibu-Ibu</option>
+        <option value="">--Pilih Kelas--</option>
         <option>Kelas A</option>
         <option>Kelas B</option>
         <option>Kelas C</option>
       </select>
 
       <button type="submit">Kirim</button>
-    </form>
-
-    <!-- Halaman Terima Kasih -->
-    <div id="thanksPage" class="hidden">
-      <h3>Terima Kasih Telah Mendaftar!</h3>
-      <p>Kami tunggu kedatangan kalian 🎉</p>
     </div>
+  </form>
+
+  <div id="thankyou-section" class="hidden">
+    <h2>Terima kasih telah mendaftar!</h2>
+    <p>Kami tunggu kedatangan kalian.</p>
   </div>
 
   <script>
-    function goToForm() {
-      document.getElementById('homePage').classList.add('hidden');
-      document.getElementById('formPage').classList.remove('hidden');
+    const scriptURL = "PASTE_URL_SCRIPT_WEB_APPS_HERE"; // Ganti dengan URL Web Apps Anda
+
+    function startForm() {
+      document.getElementById('home-section').classList.add('hidden');
+      document.getElementById('registration-form').classList.remove('hidden');
     }
 
-    document.getElementById('formPage').addEventListener('submit', async function(e) {
+    const form = document.getElementById('registration-form');
+    form.addEventListener('submit', e => {
       e.preventDefault();
-      const formData = new FormData(this);
-      const data = Object.fromEntries(formData.entries());
+      const formData = new FormData(form);
+      const data = {};
+      formData.forEach((value, key) => data[key] = value);
 
-      try {
-        const response = await fetch('https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
-
-        if (response.ok) {
-          document.getElementById('formPage').classList.add('hidden');
-          document.getElementById('thanksPage').classList.remove('hidden');
-        } else {
-          alert("Gagal mengirim data.");
+      fetch(scriptURL, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json'
         }
-      } catch (err) {
-        alert("Terjadi kesalahan: " + err);
-      }
+      })
+      .then(response => {
+        form.reset();
+        form.classList.add('hidden');
+        document.getElementById('thankyou-section').classList.remove('hidden');
+      })
+      .catch(error => alert('Gagal mengirim data. Coba lagi.'));
     });
   </script>
+
 </body>
 </html>
