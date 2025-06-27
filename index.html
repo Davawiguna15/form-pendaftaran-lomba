@@ -1,166 +1,191 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pendaftaran Lomba 17 Agustus 2025</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Formulir Pendaftaran Lomba 17 Agustus</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #e5e5e5;
+      background-color: #f0f4f8;
       margin: 0;
-      padding: 0;
-      text-align: center;
+      padding: 20px;
     }
+
     .container {
       max-width: 500px;
-      margin: 2rem auto;
-      background: white;
-      padding: 2rem;
+      background: #fff;
+      margin: 40px auto;
+      padding: 30px;
       border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    .hidden {
-      display: none;
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
     }
-    h1 {
-      font-size: 1.6rem;
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin: 10px 0 5px;
     }
+
     input, select, button {
       width: 100%;
       padding: 10px;
-      margin: 10px 0;
-      border-radius: 6px;
+      margin-bottom: 15px;
+      border-radius: 5px;
       border: 1px solid #ccc;
-      font-size: 1rem;
     }
+
     button {
       background-color: #007bff;
       color: white;
       border: none;
-      cursor: pointer;
+      font-weight: bold;
     }
-    button:hover {
-      background-color: #0056b3;
+
+    .hidden {
+      display: none;
+    }
+
+    .thanks {
+      text-align: center;
+      padding: 20px;
+      font-size: 18px;
     }
   </style>
 </head>
 <body>
 
-  <!-- Halaman Home -->
-  <div id="homePage" class="container">
-    <h1>Haii Peserta Lomba 17 Agustus 2025 RT04/RW14</h1>
-    <button onclick="showForm()">Klik Start untuk Memulai</button>
-  </div>
-
-  <!-- Halaman Form -->
-  <div id="formPage" class="container hidden">
+  <div class="container" id="formSection">
     <h2>Formulir Pendaftaran</h2>
     <form id="lombaForm">
-      <input type="text" name="nama" placeholder="Nama Lengkap Peserta" required />
-      <input type="number" name="usia" placeholder="Usia Peserta" required min="1" max="100"/>
-      <input type="text" name="nomorHP" placeholder="Nomor HP Orang Tua / Peserta" required />
-      
-      <label>Dari Buni Berapa:</label>
-      <select name="buni" required>
-        <option value="">-- Pilih --</option>
-        <option value="Buni Raya">Buni Raya</option>
+      <label for="nama">Nama Lengkap:</label>
+      <input type="text" id="nama" name="nama" required>
+
+      <label for="usia">Usia:</label>
+      <input type="number" id="usia" name="usia" required oninput="updateLombaOptions()">
+
+      <label for="nomor_hp">Nomor HP Orang Tua / Peserta:</label>
+      <input type="text" id="nomor_hp" name="nomor_hp" required>
+
+      <label for="buni">Dari Buni Berapa:</label>
+      <select id="buni" name="buni" required>
+        <option value="">Pilih Buni</option>
         <option value="Buni 1">Buni 1</option>
         <option value="Buni 2">Buni 2</option>
         <option value="Buni 3">Buni 3</option>
         <option value="Buni 4">Buni 4</option>
         <option value="Buni 5">Buni 5</option>
+        <option value="Buni Raya">Buni Raya</option>
       </select>
 
-      <label>Pilih Lomba (Maksimal 2):</label>
-      <select name="lomba1" required>
-        <option value="">-- Pilih Lomba 1 --</option>
-      </select>
-      <select name="lomba2">
-        <option value="">-- Pilih Lomba 2 --</option>
-      </select>
+      <div id="lombaContainer" class="hidden">
+        <label for="lomba">Pilih Lomba (Maksimal 2):</label>
+        <select id="lomba" name="lomba" multiple required></select>
+      </div>
 
       <button type="submit">Kirim Pendaftaran</button>
     </form>
   </div>
 
-  <!-- Halaman Terima Kasih -->
-  <div id="endPage" class="container hidden">
-    <h2>Terimakasih telah mendaftar</h2>
-    <p>KAMI TUNGGU KEDATANGAN KALIAN</p>
-    <h3>SEE YOUU 🎉</h3>
+  <div class="container hidden" id="thanks">
+    <div class="thanks">
+      <h3>Terima kasih!</h3>
+      <p>Pendaftaran berhasil dikirim.</p>
+    </div>
   </div>
 
   <script>
-    const form = document.getElementById('lombaForm');
-    const usiaField = form.elements['usia'];
-    const lomba1 = form.elements['lomba1'];
-    const lomba2 = form.elements['lomba2'];
-
-    const lombaMap = {
-      '3-5': ['Mewarnai', 'Masukin Bendera', 'Estafet gundu'],
-      '6-8': ['Menyusun Puzzle', 'Masukin Bendera', 'Estafet gundu'],
-      '9-11': ['Meniup Gelas', 'Masukin Bendera', 'Estafet gundu'],
-      '11-13': ['Memindahkan kacang dengan sumpit', 'Masukin Bendera', 'Estafet gundu'],
-      'ibu': ['Estafet Air', 'Masukin Bendera', 'Estafet gundu'],
-      'bapak': ['Estafet getok palu', 'Masukin Bendera', 'Estafet gundu']
+    const usiaLombaMap = {
+      "3-5": ["Mewarnai", "Masukin Bendera", "Estafet gundu"],
+      "6-8": ["Menyusun Puzzle", "Masukin Bendera", "Estafet gundu"],
+      "9-11": ["Meniup Gelas", "Masukin Bendera", "Estafet gundu"],
+      "12-13": ["Sumpit Kacang", "Masukin Bendera", "Estafet gundu"],
+      "ibu": ["Estafet Air", "Masukin Bendera", "Estafet gundu"],
+      "bapak": ["Getok Palu", "Masukin Bendera", "Estafet gundu"]
     };
 
-    function showForm() {
-      document.getElementById('homePage').classList.add('hidden');
-      document.getElementById('formPage').classList.remove('hidden');
-    }
-
-    function updateLombaOptions(usia) {
-      let options = [];
+    function getKategoriUsia(usia) {
       usia = parseInt(usia);
-      if (usia >= 3 && usia <= 5) options = lombaMap['3-5'];
-      else if (usia >= 6 && usia <= 8) options = lombaMap['6-8'];
-      else if (usia >= 9 && usia <= 11) options = lombaMap['9-11'];
-      else if (usia >= 12 && usia <= 13) options = lombaMap['11-13'];
-      else if (usia >= 20 && usia <= 50) options = lombaMap['ibu']; // asumsikan usia ibu
-      else if (usia >= 30 && usia <= 60) options = lombaMap['bapak']; // asumsikan usia bapak
-
-      lomba1.innerHTML = `<option value="">-- Pilih Lomba 1 --</option>`;
-      lomba2.innerHTML = `<option value="">-- Pilih Lomba 2 --</option>`;
-      options.forEach(opt => {
-        const o1 = new Option(opt, opt);
-        const o2 = new Option(opt, opt);
-        lomba1.add(o1);
-        lomba2.add(o2);
-      });
+      if (usia >= 3 && usia <= 5) return "3-5";
+      if (usia >= 6 && usia <= 8) return "6-8";
+      if (usia >= 9 && usia <= 11) return "9-11";
+      if (usia >= 12 && usia <= 13) return "12-13";
+      if (usia >= 18 && usia <= 50) return "ibu";
+      if (usia >= 51 && usia <= 70) return "bapak";
+      return null;
     }
 
-    usiaField.addEventListener('input', e => updateLombaOptions(e.target.value));
+    function updateLombaOptions() {
+      const usia = document.getElementById("usia").value;
+      const kategori = getKategoriUsia(usia);
+      const select = document.getElementById("lomba");
+      const container = document.getElementById("lombaContainer");
 
-    form.addEventListener('submit', async function(e) {
+      select.innerHTML = "";
+
+      if (!kategori || !usiaLombaMap[kategori]) {
+        container.classList.add("hidden");
+        return;
+      }
+
+      usiaLombaMap[kategori].forEach(lomba => {
+        const option = document.createElement("option");
+        option.value = lomba;
+        option.textContent = lomba;
+        select.appendChild(option);
+      });
+
+      container.classList.remove("hidden");
+    }
+
+    document.getElementById("lomba").addEventListener("change", function () {
+      const selected = [...this.options].filter(opt => opt.selected);
+      if (selected.length > 2) {
+        alert("Maksimal pilih 2 lomba saja!");
+        selected[selected.length - 1].selected = false;
+      }
+    });
+
+    document.getElementById("lombaForm").addEventListener("submit", async function (e) {
       e.preventDefault();
 
+      const form = e.target;
+      const selectedLomba = [...form.lomba.options].filter(opt => opt.selected).map(opt => opt.value);
+
+      if (selectedLomba.length === 0 || selectedLomba.length > 2) {
+        alert("Pilih minimal 1 dan maksimal 2 lomba.");
+        return;
+      }
+
       const data = {
-        nama: form.nama.value.trim(),
-        usia: form.usia.value.trim(),
-        nomorHP: form.nomorHP.value.trim(),
+        nama: form.nama.value,
+        usia: form.usia.value,
+        nomor_hp: form.nomor_hp.value,
         buni: form.buni.value,
-        lomba1: form.lomba1.value,
-        lomba2: form.lomba2.value
+        lomba: selectedLomba.join(", ")
       };
 
       try {
         const response = await fetch("https://script.google.com/macros/s/AKfycbyxsTSPmavgBQXb8nJE0sDRkeiaxpbeqb1KiW2-Hdh9urjYFXuN8qRCI8WYkn5uVgd87A/exec", {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data)
         });
 
-        // Sukses kirim
-        form.reset();
-        document.getElementById('formPage').classList.add('hidden');
-        document.getElementById('endPage').classList.remove('hidden');
+        if (response.ok) {
+          form.reset();
+          document.getElementById("formSection").classList.add("hidden");
+          document.getElementById("thanks").classList.remove("hidden");
+        } else {
+          alert("Gagal mengirim data.");
+        }
       } catch (err) {
-        alert("Terjadi kesalahan saat mengirim data.");
-        console.error(err);
+        alert("Terjadi kesalahan: " + err.message);
       }
     });
   </script>
