@@ -45,6 +45,7 @@
       color: white;
       border: none;
       font-weight: bold;
+      cursor: pointer;
     }
 
     .hidden {
@@ -70,7 +71,7 @@
       <input type="number" id="usia" name="usia" required oninput="updateLombaOptions()">
 
       <label for="nomor_hp">Nomor HP Orang Tua / Peserta:</label>
-      <input type="text" id="nomor_hp" name="nomor_hp" required>
+      <input type="tel" id="nomor_hp" name="nomor_hp" pattern="[0-9]{10,13}" required placeholder="Contoh: 081234567890">
 
       <label for="buni">Dari Buni Berapa:</label>
       <select id="buni" name="buni" required>
@@ -115,8 +116,8 @@
       if (usia >= 6 && usia <= 8) return "6-8";
       if (usia >= 9 && usia <= 11) return "9-11";
       if (usia >= 12 && usia <= 13) return "12-13";
-      if (usia >= 18 && usia <= 50) return "ibu";
-      if (usia >= 51 && usia <= 70) return "bapak";
+      if (usia >= 18 && usia <= 40) return "ibu";
+      if (usia >= 41 && usia <= 70) return "bapak";
       return null;
     }
 
