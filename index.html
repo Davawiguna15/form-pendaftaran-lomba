@@ -132,11 +132,12 @@
     };
 
     try {
-      await fetch("https://script.google.com/macros/s/AKfycbzBoFZcc7GYDUPyqpeJFPxNKYWBficNsOBnIhbXzax-CcnOtO9LYp5MgKh1AyQbonbH/exec", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      });
+      await fetch("https://script.google.com/macros/s/AKfycbwMMVpEwSOnuSwLOvSJoZZEUnfue3fbr67tZhQsjSzm9hu1JodJgSBqHO6dMYE_1wzo/exec", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(data)
+});
+
 
       form.reset();
       document.getElementById("formSection").classList.add("hidden");
