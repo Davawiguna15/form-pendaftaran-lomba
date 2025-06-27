@@ -5,19 +5,47 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Pendaftaran Lomba 17 Agustus 2025</title>
   <style>
-    body { font-family: sans-serif; background: #eef2f3; margin: 0; padding: 0; text-align: center; }
-    .container { max-width: 600px; margin: 40px auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px #ccc; }
+    body {
+      font-family: sans-serif;
+      background: #eef2f3;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ccc;
+    }
     h1, h2 { color: #333; }
-    label { display: block; margin-top: 15px; text-align: left; font-weight: bold; }
+    label {
+      display: block;
+      margin-top: 15px;
+      text-align: left;
+      font-weight: bold;
+    }
     input, select, button {
-      width: 100%; padding: 10px; margin-top: 5px; box-sizing: border-box;
-      border: 1px solid #ccc; border-radius: 4px;
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
     }
     button {
-      background-color: #007bff; color: white; font-weight: bold;
-      border: none; margin-top: 20px;
+      background-color: #007bff;
+      color: white;
+      font-weight: bold;
+      border: none;
+      margin-top: 20px;
     }
-    button:hover { background-color: #0056b3; cursor: pointer; }
+    button:hover {
+      background-color: #0056b3;
+      cursor: pointer;
+    }
     .hidden { display: none; }
   </style>
 </head>
@@ -40,7 +68,7 @@
     <input type="number" name="usia" id="usia" required min="3" onchange="updateLombaOptions()">
 
     <label>Nomor HP Orang Tua / Peserta:</label>
-    <input type="tel" name="nomor_hp" required>
+    <input type="text" name="nomor_hp" required>
 
     <label>Dari Buni Berapa:</label>
     <select name="buni" required>
@@ -58,13 +86,13 @@
       <select name="lomba" id="lomba" multiple size="4" required></select>
     </div>
 
-    <button type="submit">Kirim Pendaftaran</button>
+    <button type="submit" id="submitBtn">Kirim Pendaftaran</button>
   </form>
 </div>
 
 <!-- Halaman Terima Kasih -->
 <div id="thanks" class="container hidden">
-  <h2>Terimakasih telah mendaftar!</h2>
+  <h2>Terima kasih telah mendaftar!</h2>
   <p>KAMI TUNGGU KEDATANGAN KALIAN</p>
   <strong>SEE YOUU!</strong>
 </div>
@@ -89,15 +117,14 @@
     const select = document.getElementById("lomba");
     const container = document.getElementById("lombaContainer");
     select.innerHTML = "";
-
     let options = [];
 
     if (usia >= 3 && usia <= 5) options = usiaLombaMap["3-5"];
     else if (usia >= 6 && usia <= 8) options = usiaLombaMap["6-8"];
     else if (usia >= 9 && usia <= 11) options = usiaLombaMap["9-11"];
-    else if (usia >= 11 && usia <= 13) options = usiaLombaMap["11-13"];
-    else if (usia >= 18 && usia <= 50) options = usiaLombaMap["ibu"];
-    else if (usia >= 18 && usia <= 70) options = usiaLombaMap["bapak"];
+    else if (usia >= 12 && usia <= 13) options = usiaLombaMap["11-13"];
+    else if (usia >= 18 && usia <= 35) options = usiaLombaMap["ibu"];
+    else if (usia > 35 && usia <= 70) options = usiaLombaMap["bapak"];
 
     if (options.length > 0) {
       container.classList.remove("hidden");
@@ -114,36 +141,51 @@
 
   document.getElementById("lombaForm").addEventListener("submit", async function (e) {
     e.preventDefault();
-
     const form = e.target;
     const selected = [...form.lomba.options].filter(opt => opt.selected).map(opt => opt.value);
+    const submitBtn = document.getElementById("submitBtn");
 
     if (selected.length === 0 || selected.length > 2) {
       alert("Silakan pilih maksimal 2 lomba.");
       return;
     }
 
+    if (!form.buni.value) {
+      alert("Silakan pilih asal Buni.");
+      return;
+    }
+
     const data = {
-      nama: form.nama.value,
+      nama: form.nama.value.trim(),
       usia: form.usia.value,
-      nomor_hp: form.nomor_hp.value,
+      nomor_hp: form.nomor_hp.value.trim(),
       buni: form.buni.value,
       lomba: selected.join(", ")
     };
 
     try {
-      await fetch("https://script.google.com/macros/s/AKfycbwMMVpEwSOnuSwLOvSJoZZEUnfue3fbr67tZhQsjSzm9hu1JodJgSBqHO6dMYE_1wzo/exec", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(data)
-});
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Mengirim...";
 
+      const response = await fetch("https://script.google.com/macros/s/AKfycbwMMVpEwSOnuSwLOvSJoZZEUnfue3fbr67tZhQsjSzm9hu1JodJgSBqHO6dMYE_1wzo/exec", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
 
-      form.reset();
-      document.getElementById("formSection").classList.add("hidden");
-      document.getElementById("thanks").classList.remove("hidden");
+      const result = await response.json();
+      if (result.status === "success") {
+        form.reset();
+        document.getElementById("formSection").classList.add("hidden");
+        document.getElementById("thanks").classList.remove("hidden");
+      } else {
+        alert("Gagal mengirim data: " + result.message);
+      }
     } catch (error) {
       alert("Terjadi kesalahan saat mengirim data.");
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Kirim Pendaftaran";
     }
   });
 </script>
